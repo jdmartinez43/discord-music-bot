@@ -1,0 +1,4 @@
+# if you need to use this again log on to the 
+# discord developer portal and then go to the
+# OAuth2 section, click on bot and add the 
+# respective permissions
