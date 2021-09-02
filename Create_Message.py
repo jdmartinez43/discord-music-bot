@@ -1,5 +1,3 @@
-import Tree
-import Parsing
 import Genius_Data
 import Spotify_Data
 
@@ -34,91 +32,8 @@ errored = False
 currentMusicData = []
 lastMusicMention = []
 
-# Given the collection of parse trees returned by CYKParse, this function
-# returns the one corresponding to the complete sentence.
-def getSentenceParse(T):
-    # print(T)
-    sentenceTrees = { k: v for k,v in T.items() if k.startswith('S/0') }
-    completeSentenceTree = max(sentenceTrees.keys())
-    # print(sentenceTrees)  # print(completeSentenceTree)  #print('getSentenceParse', completeSentenceTree)
-    return T[completeSentenceTree]
 
-# Processes the leaves of the parse tree to pull out the user's request.
-def updateRequestInfo(Tr):
-    global requestInfo, currentMusicData
 
-    for leaf in Tr.getLeaves():
-            
-        print(leaf)
-        # if leaf[0] == 'MusicNoun':
-        #     # if asking and requestInfo['music_noun'] == []:
-        #     requestInfo["music_noun"] = currentMusicData
-        
-        if leaf[0] == 'Noun' and leaf[1] == 'lyrics':
-            requestInfo['lyrics'] = True
-        
-        if leaf[0] == 'Adjective' and leaf[1] == 'release':
-            requestInfo['release']  = True
-
-        if leaf[0] == 'Adverb' and leaf[1] == 'most':
-            requestInfo['most'] = True
-
-        if leaf[0] == 'Adjective' and leaf[1] in {'popular', 'played', 'listened'}:
-            requestInfo['popular'] = True
-
-        if leaf[0] == 'Noun' and leaf[1] == 'song':
-            requestInfo['song'] = True
-            
-        if leaf[0] == 'Noun' and leaf[1] == 'songs':
-            requestInfo['songs'] = True
-
-        if leaf[0] == 'Noun' and leaf[1] == 'album':
-            requestInfo['album'] = True
-            
-        if leaf[0] == 'Noun' and leaf[1] == 'albums':
-            requestInfo['albums'] = True
-
-        if leaf[0] == "Noun" and leaf[1] == 'remix':
-            requestInfo['remix'] = True
-
-        if leaf[0] == "Noun" and leaf[1] == 'interpolations':
-            requestInfo['interpolations'] = True
-        
-        if leaf[0] == "Noun" and leaf[1] == 'covers':
-            requestInfo['covers'] = True
-
-        if leaf[0] == "Adverb" and leaf[1] == 'sampled':
-            requestInfo['sampled'] = True
-
-        if leaf[0] == 'Adjective' and leaf[1] == 'follower':
-            requestInfo['following'] = True
-
-        if leaf[0] == 'Adjective' and leaf[1] == 'best':
-            requestInfo['most'] = True
-
-        if leaf[0] == 'Adjective' and leaf[1] == 'top':
-            requestInfo['top'] = True
-        
-        if leaf[0] == 'Noun' and leaf[1] == 'type':
-            requestInfo['type'] = True
-        
-        if leaf[0] == 'Noun' and leaf[1] == 'tempo':
-            requestInfo['tempo'] = True
-        
-        if leaf[0] == 'Noun' and leaf[1] == 'happiness':
-            requestInfo['happiness'] = True
-        
-        if leaf[0] == 'Noun' and leaf[1] == 'danceability':
-            requestInfo['danceability'] = True
-
-        if leaf[0] == 'Noun' and leaf[1] == 'energy':
-            requestInfo['energy'] = True
-        
-        if leaf[0] == 'Noun' and leaf[1] == 'popularity':
-            requestInfo['popularity'] = True
-        
-        if leaf[0] == 'Noun' and leaf[1] == 'length':
-            requestInfo['length'] = True
 
 # Format a reply to the user, based on what the user wrote.
 def formReply() -> str:
@@ -417,9 +332,7 @@ def chat(user_input) -> str:
             return "Goodbye!"
 
     cykp, musics = Parsing.compile_msg(user_input)
-    tree_parse = cykp[0]
     currentMusicData = musics
-    # print("bi", requestInfo)
 
     # use previous data if user didnt specify
     if currentMusicData == []: 
@@ -430,13 +343,11 @@ def chat(user_input) -> str:
         errored = True
 
     try:
-        sentenceTree = getSentenceParse(tree_parse)
-        updateRequestInfo(sentenceTree)
+        
+        # TODO: DECODE THE SENTENCE AND UPDATE THE GLOBAL VARIABLES
+
         reply = formReply()
 
-        # print(musics)
-        # print("after", requestInfo)
-        # print(currentMusicData)
 
         if errored == False:
             if useSpotify:
@@ -459,33 +370,5 @@ def chat(user_input) -> str:
 if __name__ == "__main__":
     pass
 
-    # genius
-    # works
-    # user_input = "what are the lyrics for one dance by drake"
-    # user_input = "when was the release date for xs by rina sawayama"
-    # user_input = "who did a remix for chandlier by sia"
-    # user_input = "who did interpolations for chandlier by sia"
-    # user_input = "who did covers of chandlier by sia"
-    # user_input = "who has sampled from chandlier by sia"
-    
-    # user_input = "what is the most played song by Dua Lipa"
-    # user_input = "what are the most played songs by cbdjklvacnsjkdlncsjdncjasd"
-    # user_input = "what is the length of 1997 diana by brockhampton" 
-    # user_input = "what are the top songs from Earthgang"
-    # user_input = "what is the top song by Earthgang"
-    # user_input = "what type of music does Dayglow make"
-    # user_input = "what is the following of The Weeknd"
-    # user_input = "what is the danceability of around the world by daft punk" 
-    # user_input = "what is the energy of mic drop by bts"  
-    # user_input = "what is the popularity of Mereba" 
-    # user_input = "what is the tempo of the kill"
-    # user_input = "what is the happiness of money by amine" 
-
-    # not implemented
-    # user_input = "what are albums by Earthgang"
-
-    # test by uncommenting each user_input string
-    # x = chat(user_input)
-    # print(x)
 
     
