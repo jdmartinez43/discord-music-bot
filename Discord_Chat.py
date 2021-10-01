@@ -2,6 +2,7 @@ import discord
 import Create_Message
 
 client = discord.Client()
+DISCORD_TOKEN = ""
 
 # https://discord.com/developers/docs/interactions/application-commands#slash-commands
 slash_commands = [
@@ -85,5 +86,5 @@ async def on_message(message:str) -> None:
         msg_txt = msg_txt[index_sep:].strip() # get rid of any extra white space
     
 
-client.run("ODEzNjUzMTE0OTAwODQwNDQ4.YDSbgw.VntaalyhvUQL9h58SmnEDMwUejw")  # local version, do not share
+client.run(DISCORD_TOKEN)  # local version, do not share
 # client.run(os.getenv('TOKEN')) for non local versions
