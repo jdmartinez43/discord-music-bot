@@ -1,0 +1,6 @@
+/docs/**
+/__pycache__/**
+
+Environment_Variables.py
+Tree.py
+Parsing.py

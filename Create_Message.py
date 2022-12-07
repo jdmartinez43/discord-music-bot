@@ -1,5 +1,6 @@
-import Genius_Data
-import Spotify_Data
+import Genius_Data as Genius
+import Spotify_Data as Spotify
+import Parsing
 
 requestInfo = {
         'most'   : False,
@@ -33,8 +34,6 @@ currentMusicData = []
 lastMusicMention = []
 
 
-
-
 # Format a reply to the user, based on what the user wrote.
 def formReply() -> str:
     global requestInfo, haveGreeted, currentMusicData, useSpotify, errored, useGenius
@@ -45,7 +44,7 @@ def formReply() -> str:
         composed += "Hello. "
 
     if requestInfo['lyrics']:
-        music_data = Genius_Data.getLyrics( " ".join(currentMusicData) )
+        music_data = Genius.getLyrics( " ".join(currentMusicData) )
         if music_data == None:
             composed += "Hm, Genius.com doesn't seem to have data on that song. Try a different song?"
             errored = True
@@ -58,7 +57,7 @@ def formReply() -> str:
         return composed
     
     elif requestInfo['release']:
-        music_data = Genius_Data.getReleaseDate( " ".join(currentMusicData))
+        music_data = Genius.getReleaseDate( " ".join(currentMusicData))
         if music_data == None:
             composed += "Hm, Genius.com doesn't seem to have data on that song. Try a different song?"
             errored = True
@@ -73,7 +72,7 @@ def formReply() -> str:
     elif requestInfo['top'] or (requestInfo['most'] and requestInfo['popular']):
         if requestInfo['song']:
             try:
-                music_data = Spotify_Data.getTopSongs( " ".join(currentMusicData) , 1)
+                music_data = Spotify.getTopSongs( " ".join(currentMusicData) , 1)
                 # print(type(music_data))
                 song , (artist, link ) = music_data
                 composed += f"Here is {artist}'s top song:\n {song[0]}"
@@ -88,7 +87,7 @@ def formReply() -> str:
 
         elif requestInfo['songs']:
             try:
-                music_data = Spotify_Data.getTopSongs( " ".join(currentMusicData) , 10)
+                music_data = Spotify.getTopSongs( " ".join(currentMusicData) , 10)
                 songs, (artist, link ) = music_data
                 # print(songs)
                 composed += f"Here are {artist}'s top songs:\n{ ''.join([s for s in songs]) }"
@@ -102,7 +101,7 @@ def formReply() -> str:
                 return composed
     
     elif requestInfo['remix']:
-        music_data = Genius_Data.getWhoRemixed( " ".join(currentMusicData) )
+        music_data = Genius.getWhoRemixed( " ".join(currentMusicData) )
         if music_data == None:
             composed += "Hm, Genius.com doesn't seem to have data on that song. Try a different song?"
             errored = True
@@ -118,7 +117,7 @@ def formReply() -> str:
         return composed
     
     elif requestInfo['interpolations']:
-        music_data = Genius_Data.getWhoInterpolated( " ".join(currentMusicData) )
+        music_data = Genius.getWhoInterpolated( " ".join(currentMusicData) )
         if music_data == None:
             composed += "Hm, Genius.com doesn't seem to have data on that song. Try a different song?"
             errored = True
@@ -134,14 +133,14 @@ def formReply() -> str:
         return composed
     
     elif requestInfo['covers']:
-        music_data = Genius_Data.getWhoCovered( " ".join(currentMusicData) )
+        music_data = Genius.getWhoCovered( " ".join(currentMusicData) )
         if music_data == None:
             composed += "Hm, Genius.com doesn't seem to have data on that song. Try a different song?"
             errored = True
         else:
             data, (title, artist) = music_data
             if data != []:
-                composed += f"Here are the known covers of {title} by {artist}\n{' '.join(data)}\n"
+                composed += f"Here are known covers of {title} by {artist}\n{' '.join(data)}\n"
             else:
                 composed += f"{title} by {artist} has not been covered by anyone\n"            
             # requestInfo['music_noun'] = [title, artist] # for using in future parts
@@ -150,7 +149,7 @@ def formReply() -> str:
         return composed
     
     elif requestInfo['sampled']:
-        music_data = Genius_Data.getWhoSampled( " ".join(currentMusicData) )
+        music_data = Genius.getWhoSampled( " ".join(currentMusicData) )
         if music_data == None:
             composed += "Hm, Genius.com doesn't seem to have data on that song. Try a different song?"
             errored = True
@@ -167,7 +166,7 @@ def formReply() -> str:
 
     elif requestInfo['type']:
         try:
-            music_data = Spotify_Data.getGenres( " ".join(currentMusicData) )
+            music_data = Spotify.getGenres( " ".join(currentMusicData) )
             genres , (artist, link ) = music_data
             composed += f"{artist} makes music for these genres: {genres}\n"
             # requestInfo['music_noun'] = [artist,link]
@@ -181,7 +180,7 @@ def formReply() -> str:
     
     elif requestInfo['following']:
         try:
-            music_data = Spotify_Data.getFollowing( " ".join(currentMusicData) )
+            music_data = Spotify.getFollowing( " ".join(currentMusicData) )
             x , (artist, link ) = music_data
             composed += f"{artist} has {x} many followers\n"
             # requestInfo['music_noun'] = [artist,link]
@@ -195,12 +194,12 @@ def formReply() -> str:
     
     elif requestInfo['popularity']:
         try:
-            music_data = Spotify_Data.getArtistPopularity( " ".join(currentMusicData) )
+            music_data = Spotify.getArtistPopularity( " ".join(currentMusicData) )
             pop , ( artist, link ) = music_data
             if pop > 75:
-                composed += f"{artist} is pretty popular! Out of a 0-100 popularity scale their score is: {pop}\n"
+                composed += f"{artist} is very popular. Out of a 0-100 popularity scale their score is: {pop}\n"
             elif pop > 50:
-                composed += f"{artist} is averagely popular. Out of a 0-100 popularity scale their score is: {pop}\n"
+                composed += f"{artist} is pretty popular. Out of a 0-100 popularity scale their score is: {pop}\n"
             elif pop > 25:
                 composed += f"{artist} is a little popular. Out of a 0-100 popularity scale their score is: {pop}\n"
             else:
@@ -217,12 +216,12 @@ def formReply() -> str:
 
     elif requestInfo['danceability']:
         try:
-            music_data = Spotify_Data.getDanceability( " ".join(currentMusicData) )
+            music_data = Spotify.getDanceability( " ".join(currentMusicData) )
             dance , (track, artist, link ) = music_data
             if dance > 0.75:
-                composed += f"{track} by {artist} is pretty danceable! Out of a 0-1 scale it's danceability is: {dance}\n"
+                composed += f"{track} by {artist} is very danceable. Out of a 0-1 scale it's danceability is: {dance}\n"
             elif dance > 0.5:
-                composed += f"{track} by {artist} is kinda danceable. Out of a 0-1 scale it's danceability is: {dance}\n"
+                composed += f"{track} by {artist} is pretty danceable. Out of a 0-1 scale it's danceability is: {dance}\n"
             elif dance > 0.25:
                 composed += f"{track} by {artist} is not very danceable. Out of a 0-1 scale it's danceability is: {dance}\n"
             else:
@@ -240,7 +239,7 @@ def formReply() -> str:
 
     elif requestInfo['energy']:
         try:
-            music_data = Spotify_Data.getEnergy( " ".join(currentMusicData) )
+            music_data = Spotify.getEnergy( " ".join(currentMusicData) )
             energy , ( track, artist, link ) = music_data
             if energy > .75:
                 composed += f"{track} by {artist} is very energetic! On a 0-1 scale their score is: {energy}\n"
@@ -262,7 +261,7 @@ def formReply() -> str:
 
     elif requestInfo['tempo']:
         try:
-            music_data = Spotify_Data.getTempo( " ".join(currentMusicData) )
+            music_data = Spotify.getTempo( " ".join(currentMusicData) )
             t , ( track, artist, link ) = music_data
             composed += f"{track} by {artist} has a tempo of {t}.\n"
             # requestInfo['music_noun'] = [track, artist, link]
@@ -277,7 +276,7 @@ def formReply() -> str:
             
     elif requestInfo['happiness']:
         try:
-            music_data = Spotify_Data.getHappiness( " ".join(currentMusicData) )
+            music_data = Spotify.getHappiness( " ".join(currentMusicData) )
             t , ( track, artist, link ) = music_data
             composed += f"{track} by {artist} has a happiness of {t}.\n"
             # requestInfo['music_noun'] = [track, artist, link]
@@ -291,7 +290,7 @@ def formReply() -> str:
 
     elif requestInfo['length']:
         try:
-            music_data = Spotify_Data.getSongLength( " ".join(currentMusicData) )
+            music_data = Spotify.getSongLength( " ".join(currentMusicData) )
             t , ( track, artist, link ) = music_data
             composed += f"{track} by {artist} is {t} seconds long.\n"
             # requestInfo['music_noun'] = [track, artist, link]
@@ -364,7 +363,6 @@ def chat(user_input) -> str:
     except:
         reply += "Hm, I couldn't parse the response you gave. Can you try rewording it?"
     resetInfo()
-    # print("lmma after delete", lastMusicMention)
     return reply
 
 if __name__ == "__main__":

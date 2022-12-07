@@ -1,10 +1,12 @@
 # Spotify_Data.py
-# 9/1/21: revamped from the original version from CS 171
+from Environment_Variables import *
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-auth_manager = SpotifyClientCredentials( client_id="15cd7aacd3c445029ba60aec55c911d5", client_secret="604b5edcb28547828d0410454d6d3519")
+auth_manager = SpotifyClientCredentials( 
+    client_id=SPOTIFY_CLIENT_ID,
+    client_secret=SPOTIFY_CLIENT_SECRET)
 spotify = spotipy.Spotify(auth_manager=auth_manager)
 
 def getTopSongs(name: str, count: int ):

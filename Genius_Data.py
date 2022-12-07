@@ -3,10 +3,11 @@ sample code from https://lyricsgenius.readthedocs.io/en/master/reference/genius.
 was used to help build this project
 """
 from lyricsgenius import Genius
+from Environment_Variables import *
 
-CLIENT_ID = "712UHU3TY2BmfPIy9w0eo9Il2drR9Nh0-EM2lmi4dYJHPMEzCdAOAD1-GHAiuOpw"
-CLIENT_SECRET = "3mN9Xh9J-a_ZXGh5tM_-kFFcPIFQVT4B0DA44RGjuN9b-dQr7DS5U0waQNbm_wjDoYrG0Uj4fMV3FfVi05eNVQ"
-CLIENT_TOKEN = "S9dTm38YUImBFf5xqijCxoaVd_kiTDuys9elC560wH6G7M-ktEP62blPiDFAqBC4"
+CLIENT_ID = GENIUS_CLIENT_ID
+CLIENT_SECRET = GENIUS_CLIENT_SECRET
+CLIENT_TOKEN = GENIUS_CLIENT_TOKEN
 
 genius = Genius(CLIENT_TOKEN, verbose = False)
 

@@ -1,40 +1,10 @@
 import discord
 import Create_Message
+from Environment_Variables import *
 
 client = discord.Client()
-DISCORD_TOKEN = ""
+DISCORD_TOKEN = DISCORD_TOKEN
 
-# https://discord.com/developers/docs/interactions/application-commands#slash-commands
-slash_commands = [
-    {
-        "name": "sample name",
-        "description": "sample descriptions",
-        "options" : [
-            {
-                "name": "animal", 
-                "description": "The type of animal",
-                "type": 3,                                  # look at integer type value on developer portal
-                "required": True,
-                "choices": [
-                    {
-                        "name": "sample1",
-                        "value": "value1"
-                    },
-                    {
-                        "name": "sample2",
-                        "value": "value2"
-                    }
-                ]
-            },
-            {
-                "name": "small value",
-                "description": "small description? i guess",
-                "type": 5,
-                "required": False
-            }
-        ]
-    }
-]
 
 # discord recommends using bigint's to store the permissions for your bot
 # use by OR'ing hex values together 
@@ -67,7 +37,7 @@ def separate_msg(msg:str) -> int:
 async def on_ready() -> None:
     print('We have logged in as {0.user}'.format(client))
 
-# 
+# function for sending messages 
 @client.event
 async def on_message(message:str) -> None:
         
@@ -80,6 +50,7 @@ async def on_message(message:str) -> None:
         await message.channel.send(msg_txt)
         await client.close()
 
+    # loop that sends messages until the msg buffer is empty
     while len(msg_txt) > 0:
         index_sep = separate_msg(msg_txt)
         await message.channel.send(msg_txt[0:index_sep])
